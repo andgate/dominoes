@@ -8,12 +8,11 @@
 #include <random>
 #include <chrono>
 #include <memory>
+#include <utility>
 
 #include "domino.h"
-#include "player.h"
 
 using namespace std;
-
 
 class Table
 {
@@ -24,19 +23,16 @@ private:
 	vector<shared_ptr<Domino>> 	boneyard;
 	list<shared_ptr<Domino>> 	chain;
 
-	Player p1;
-	Player p2;
-
 public:
 	Table()
-		: boneyard(), chain()
-		, p1() , p2()
+		: boneyard()
+		, chain()
 	{}
 	
 	~Table()
 	{}
 
-	void build()
+	void setup()
 	{
 		// Generate dominos
 		boneyard.clear();
@@ -50,15 +46,54 @@ public:
 
 		unsigned seed = chrono::system_clock::now().time_since_epoch().count();
     	shuffle(boneyard.begin(), boneyard.end(), default_random_engine(seed));
-
-		for (auto& dom : boneyard)
-			cout << "[" << dom->fst() << "|" << dom->snd() << "]" << endl;
 	}
 
-	void deal(Player* p)
+	shared_ptr<Domino> draw()
 	{
-		p->take(boneyard.back());
+		shared_ptr<Domino> dom(boneyard.back());
 		boneyard.pop_back();
+		return dom;
+	}
+
+	bool boneyardEmpty()
+	{
+		return boneyard.empty();
+	}
+
+	int getChainHead()
+	{
+		return chain.front()->getHead();
+	}
+
+	void addChainHead(shared_ptr<Domino> dom)
+	{
+		chain.push_front(dom);
+	}
+
+	int getChainTail()
+	{
+		return chain.back()->getTail();
+	}
+
+	void addChainTail(shared_ptr<Domino> dom)
+	{
+		chain.push_back(dom);
+	}
+
+
+	void printBoneyard()
+	{
+		for (auto& dom : boneyard)
+			cout << "[" << dom->getTail() << "|" << dom->getHead() << "] ";
+		cout << endl;
+	}
+
+
+	void printChain()
+	{
+		for (auto& dom : chain)
+			cout << "[" << dom->getTail() << "|" << dom->getHead() << "] ";
+		cout << endl;
 	}
 };
 

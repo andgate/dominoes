@@ -1,10 +1,7 @@
-#include "table.h"
- 
+#include "api.h"
 
 int main()
 {
-    Table table;
-    table.build();
-
-    return 0;
+    API api;
+    return api.run();
 }
