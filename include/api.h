@@ -1,22 +1,27 @@
 #ifndef API_H
 #define API_H
 
+#include <vector>
+
 #include "player.h"
 #include "table.h"
 #include "coin.h"
 
+using namespace std;
+
 class API {
 private:
 	Table table;
-	Player p1;
-	Player p2;
+	
+	vector<Player> players;
 
-	int currentTurn = 0;
+	int currPlayerIndex = 0;
 	int turnCount = 0;
 
 public:
 	API()
-		: table(), p1(), p2()
+		: table()
+		, players()
 	{}
 
 	int run()
@@ -24,14 +29,19 @@ public:
 		table.setup();
 		table.printBoneyard();
 
+		players.push_back(Player("Player1"));
+		players.push_back(Player("Player2"));
+
 		deal();
 		pickFirstTurn();
 		initialTurn();
 
-		while(!p1.handEmpty() && !p2.handEmpty())
+		while(!isBlocked())
 		{
-			turn();
+			if(playTurn()) return 0;
 		}
+
+		cout << "Players are blocked. Game over!" << endl;
 
 		return 0;
 	}
@@ -40,39 +50,43 @@ public:
 	{
 		cout << "Flipping a coin to decide who goes first...";
 		
-		if(flipCoin()) {
-			cout << "Player1 goes first!" << endl;
-			currentTurn = 0;
-		} else {
-			cout << "Player2 goes first!" << endl;
-			currentTurn = 1;
-		}
+		srand(time(nullptr));
+		currPlayerIndex = abs(rand()) % players.size();
+
+		Player* currPlayer = getCurrentPlayer();
+		cout << currPlayer->getName() << " goes first!" << endl;
+
 	}
 
 	void deal()
 	{
-		p1.draw(&table, 10);
-		cout << "Player1 drawing.." << endl;
-		p1.printHand();
-
-		p2.draw(&table, 10);
-		cout << "Player2 drawing.." << endl;
-		p2.printHand();
+		for(size_t i = 0; i < players.size(); ++i)
+		{
+			Player* player = &players[i];
+			player->draw(&table, 10);
+			cout << player->getName() << " is drew 10 dominoes." << endl;
+			player->printHand();
+		}
 	}
 
 
 	void initialTurn()
 	{
-		Player* currPlayer = nextPlayer();
+		Player* currPlayer = getCurrentPlayer();
+
+		cout << currPlayer->getName() << "'s turn..." << endl;
 		shared_ptr<Domino> dom(currPlayer->takeRandom());
 		table.addChainTail(dom);
+
+		nextPlayer();
 	}
 
-	void turn()
+	bool playTurn()
 	{
-		Player* currPlayer = nextPlayer();
-		currPlayer->playTurn(&table);
-		++turnCount;
+		Player* player = getCurrentPlayer();
+		player->playTurn(&table);
+
+		cout << player->getName() << "'s turn..." << endl;
 
 		cout << "Current chain: ";
 		table.printChain();
@@ -80,23 +94,48 @@ public:
 		cout << "Current boneyard: ";
 		table.printBoneyard();
 
-		cout << "Player1's Hand: ";
-		p1.printHand();
+		printPlayersHands();
 
-		cout << "Player2's Hand: ";
-		p2.printHand();
+		if(player->handEmpty())
+		{
+			cout << player->getName() << " is the winner!" << endl;
+			return true;
+		}
+
+		++turnCount;
+		nextPlayer();
+		return false;
 	}
 
 	Player* nextPlayer()
 	{
-		if (currentTurn) {
-			cout << "Player1's turn..." << endl;
-			currentTurn = 0;
-			return &p1;
-		} else {
-			cout << "Player2's turn..." << endl;
-			currentTurn = 1;
-			return &p2;
+		currPlayerIndex = (currPlayerIndex+1) % players.size();
+		Player* currentPlayer = getCurrentPlayer();
+		return currentPlayer;
+	}
+
+	Player* getCurrentPlayer()
+	{
+		return &players[currPlayerIndex];
+	}
+
+	bool isBlocked()
+	{
+		bool blocked = false;
+		for(size_t i = 0; i < players.size(); ++i)
+		{
+			blocked |= players[i].isBlocked();
+		}
+
+		return blocked;
+	}
+
+	void printPlayersHands()
+	{
+		for(size_t i = 0; i < players.size(); ++i)
+		{
+			cout << players[i].getName() << "'s Hand: ";
+			players[i].printHand();
 		}
 	}
 };

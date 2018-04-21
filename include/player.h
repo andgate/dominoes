@@ -4,6 +4,7 @@
 #include <memory>
 #include <utility>
 #include <vector>
+#include <string>
 
 #include "domino.h"
 #include "table.h"
@@ -14,10 +15,12 @@ class Player
 {
 private:
 	vector<shared_ptr<Domino>> hand;
+	string m_name;
+	bool m_isBlocked;
 
 public:
-	Player()
-		: hand()
+	Player(string name)
+		: hand(), m_name(name), m_isBlocked(false)
 	{}
 
 	~Player() {}
@@ -41,6 +44,8 @@ public:
 
 	void playTurn(Table* table)
 	{
+		m_isBlocked = false;
+
 		for(size_t i = 0; i < hand.size(); ++i)
 		{
 			shared_ptr<Domino> dom(hand[i]); 
@@ -55,7 +60,11 @@ public:
 		while(true)
 		{
 			shared_ptr<Domino> dom = table->draw();
-			if(dom == nullptr) return;
+			if(dom == nullptr)
+			{
+				m_isBlocked = true;
+				return;
+			}
 
 			if (table->playPiece(dom))
 				return;
@@ -79,6 +88,16 @@ public:
 	bool handEmpty()
 	{
 		return hand.empty();
+	}
+
+	bool isBlocked()
+	{
+		return m_isBlocked;
+	}
+
+	string getName()
+	{
+		return m_name;
 	}
 
 	void printHand()
