@@ -22,11 +22,13 @@ public:
 
 	~Player() {}
 
+
 	void draw(Table* table)
 	{
 		shared_ptr<Domino> dom = table->draw();
 		hand.push_back(dom);
 	}
+
 
 	void draw(Table* table, int amount)
 	{
@@ -36,42 +38,30 @@ public:
 		}
 	}
 
+
 	void playTurn(Table* table)
 	{
-		int head = table->getChainHead();
-		int tail = table->getChainTail();
-
 		for(size_t i = 0; i < hand.size(); ++i)
 		{
 			shared_ptr<Domino> dom(hand[i]); 
-			int domHead = dom->getHead();
-			int domTail = dom->getTail();
-
-			if (domHead == head) {
-				table->addChainHead(dom);
-				hand.erase(hand.begin() + i);
-				return;
-			} else if (domTail == tail) {
-				table->addChainTail(dom);
-				hand.erase(hand.begin() + i);
-				return;
-			}
-
-			dom->rotate();
-
-			if (domHead == head) {
-				table->addChainHead(dom);
-				hand.erase(hand.begin() + i);
-				return;
-			} else if (domTail == tail) {
-				table->addChainTail(dom);
-				hand.erase(hand.begin() + i);
+			if(table->playPiece(dom))
+			{
+				hand.erase(hand.begin()+i);
 				return;
 			}
 		}
 
-		// Otherwise, draw and exit
-		draw(table);
+		// Otherwise, draw until a piece is playable
+		while(true)
+		{
+			shared_ptr<Domino> dom = table->draw();
+			if(dom == nullptr) return;
+
+			if (table->playPiece(dom))
+				return;
+			else
+				hand.push_back(dom);
+		}
 	}
 
 	shared_ptr<Domino> takeRandom()

@@ -12,6 +12,7 @@ private:
 	Player p2;
 
 	int currentTurn = 0;
+	int turnCount = 0;
 
 public:
 	API()
@@ -71,12 +72,19 @@ public:
 	{
 		Player* currPlayer = nextPlayer();
 		currPlayer->playTurn(&table);
+		++turnCount;
 
 		cout << "Current chain: ";
 		table.printChain();
 
 		cout << "Current boneyard: ";
 		table.printBoneyard();
+
+		cout << "Player1's Hand: ";
+		p1.printHand();
+
+		cout << "Player2's Hand: ";
+		p2.printHand();
 	}
 
 	Player* nextPlayer()

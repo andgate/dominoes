@@ -50,6 +50,7 @@ public:
 
 	shared_ptr<Domino> draw()
 	{
+		if (boneyard.empty()) return nullptr;
 		shared_ptr<Domino> dom(boneyard.back());
 		boneyard.pop_back();
 		return dom;
@@ -81,10 +82,44 @@ public:
 	}
 
 
+	bool playPiece(shared_ptr<Domino> dom)
+	{
+		if(chain.empty())
+		{
+			chain.push_back(dom);
+			return true;
+		}
+
+		int head = getChainHead();
+		int tail = getChainTail();
+
+		if (dom->getHead() == tail)
+		{
+			addChainTail(dom);
+			return true;
+		} else if (dom->getTail() == head) {
+			addChainHead(dom);
+			return true;
+		}
+
+		dom->rotate();
+
+		if (dom->getHead() == tail) {
+			addChainTail(dom);
+			return true;
+		} else if (dom->getTail() == head) {
+			addChainHead(dom);
+			return true;
+		}
+
+		return false;
+	}
+
+
 	void printBoneyard()
 	{
 		for (auto& dom : boneyard)
-			cout << "[" << dom->getTail() << "|" << dom->getHead() << "] ";
+			cout << "[" << dom->getHead() << "|" << dom->getTail() << "] ";
 		cout << endl;
 	}
 
@@ -92,7 +127,7 @@ public:
 	void printChain()
 	{
 		for (auto& dom : chain)
-			cout << "[" << dom->getTail() << "|" << dom->getHead() << "] ";
+			cout << "[" << dom->getHead() << "|" << dom->getTail() << "] ";
 		cout << endl;
 	}
 };
