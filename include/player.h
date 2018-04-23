@@ -11,6 +11,10 @@
 
 using namespace std;
 
+/**
+ * @brief The Player class
+ * 
+ */
 class Player
 {
 private:
@@ -25,14 +29,26 @@ public:
 
 	~Player() {}
 
-
+	/**
+	 * @brief Draws one domino
+	 * 
+	 * @param table 
+	 */
 	void draw(Table* table)
 	{
 		shared_ptr<Domino> dom = table->draw();
 		hand.push_back(dom);
 	}
 
-
+	/**
+	 * @brief Draws multiple dominos
+	 * 
+	 * The player draws the amount of dominos as
+	 * specified by 'amount'
+	 * 
+	 * @param table 
+	 * @param amount 
+	 */
 	void draw(Table* table, int amount)
 	{
 		for(int i = 0; i < amount; ++i)
@@ -41,7 +57,14 @@ public:
 		}
 	}
 
-
+	/**
+	 * @brief The player's standard turn
+	 * 
+	 * Tries to play a domino from the player's hand.
+	 * If unsucessful, draw a domino and repeat the process.
+	 * 
+	 * @param table 
+	 */
 	void playTurn(Table* table)
 	{
 		m_isBlocked = false;
@@ -73,6 +96,11 @@ public:
 		}
 	}
 
+	/**
+	 * @brief Takes a random domino from the player's hand
+	 * 
+	 * @return shared_ptr<Domino> 
+	 */
 	shared_ptr<Domino> takeRandom()
 	{
 		std::srand(std::time(nullptr));
@@ -84,22 +112,42 @@ public:
 		return dom;
 	}
 
-
+	/**
+	 * @brief Determines if the hand is empty
+	 * 
+	 * @return true 
+	 * @return false 
+	 */
 	bool handEmpty()
 	{
 		return hand.empty();
 	}
 
+	/**
+	 * @brief Determines if the player is blocked
+	 * 
+	 * @return true 
+	 * @return false 
+	 */
 	bool isBlocked()
 	{
 		return m_isBlocked;
 	}
 
+	/**
+	 * @brief Get the Name object
+	 * 
+	 * @return string 
+	 */
 	string getName()
 	{
 		return m_name;
 	}
 
+	/**
+	 * @brief Prints the player's hand
+	 * 
+	 */
 	void printHand()
 	{
 		for (auto& dom : hand)
