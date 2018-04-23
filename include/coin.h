@@ -3,7 +3,12 @@
 
 #include <cstdlib>
 
-
+/**
+ * @brief Randomly returns true or false
+ * 
+ * @return true 
+ * @return false 
+ */
 bool flipCoin()
 {
 	std::srand(std::time(nullptr));
