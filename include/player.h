@@ -2,12 +2,12 @@
 #define PLAYER_H
 
 #include <memory>
-#include <utility>
-#include <vector>
 #include <string>
+#include <vector>
 
 #include "domino.h"
 #include "table.h"
+#include "random.h"
 
 using namespace std;
 
@@ -15,7 +15,7 @@ using namespace std;
  * @brief The Player class
  * 
  */
-class Player
+class Player : Random
 {
 private:
 	vector<shared_ptr<Domino>> hand;
@@ -28,11 +28,16 @@ public:
 	{}
 
 	~Player() {}
+	
+	void create()
+    {
+        Random::create();
+    }
 
 	/**
 	 * @brief Draws one domino
 	 * 
-	 * @param table 
+	 * @param table
 	 */
 	void draw(Table* table)
 	{
@@ -103,8 +108,7 @@ public:
 	 */
 	shared_ptr<Domino> takeRandom()
 	{
-		std::srand(std::time(nullptr));
-		int domIndex = std::rand() % (hand.size() - 1);
+		int domIndex = randomInt(0, hand.size() - 1);
 		
 		shared_ptr<Domino> dom(hand.at(domIndex));
 		hand.erase(hand.begin() + domIndex);

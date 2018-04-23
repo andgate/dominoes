@@ -4,17 +4,14 @@
 #include <iostream>
 #include <list>
 #include <vector>
-#include <algorithm>
-#include <random>
-#include <chrono>
 #include <memory>
-#include <utility>
 
 #include "domino.h"
+#include "random.h"
 
 using namespace std;
 
-class Table
+class Table : Random
 {
 
 private:
@@ -33,16 +30,20 @@ public:
 	
 	~Table()
 	{}
+    
 
 	/**
-	 * @brief Creates the dominoes
+	 * @brief Initializes random number generator,
+     *        creates and shuffles dominoes.
 	 * 
 	 * Generates every domino possible and adds
 	 * them to the boneyard. Then randomizes the
 	 * order of the boneyard
 	 */
-	void setup()
+	void create()
 	{
+        Random::create();
+        
 		boneyard.clear();
 		boneyard.reserve(DOMINOS_COUNT);
 		for (int i = 0; i <= DOMINO_MAX; ++i) {
@@ -52,10 +53,22 @@ public:
 			}
     	}
 
-		unsigned seed = chrono::system_clock::now().time_since_epoch().count();
-    	shuffle(boneyard.begin(), boneyard.end(), default_random_engine(seed));
+		shuffleBoneyard();
 	}
 
+	
+	void shuffleBoneyard()
+    {
+        int n = boneyard.size() - 1;
+        shared_ptr<Domino> tmp = nullptr;
+        for (unsigned i = 0; i < boneyard.size(); ++i)
+        {
+            unsigned j = randomInt(0, n);
+            tmp = boneyard[i];
+            boneyard[i] = boneyard[j];
+            boneyard[j] = tmp;
+        }
+    }
 
 	/**
 	 * @brief Adds a domino into the player's hand

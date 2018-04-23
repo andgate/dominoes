@@ -3,13 +3,14 @@
 
 #include <vector>
 
+#include "random.h"
 #include "player.h"
 #include "table.h"
-#include "coin.h"
 
 using namespace std;
 
-class API {
+class API : Random
+{
 private:
 	Table table;
 	
@@ -36,12 +37,8 @@ public:
 	 */
 	int run()
 	{
-		table.setup();
-		table.printBoneyard();
-
-		players.push_back(Player("Player1"));
-		players.push_back(Player("Player2"));
-
+        create();
+        
 		deal();
 		pickFirstTurn();
 		initialTurn();
@@ -55,6 +52,29 @@ public:
 
 		return 0;
 	}
+	
+	void create()
+    {
+        Random::create();
+        
+        table.create();
+		table.printBoneyard();
+
+        createPlayers();
+    }
+	
+	void createPlayers()
+    {
+        Player p1 = Player("Player1");
+        Player p2 = Player("Player2");
+        
+        p1.create();
+        p2.create();
+        
+		players.push_back(p1);
+		players.push_back(p2);
+    }
+    
 
 	/**
 	 * @brief Randomly decides which player goes first
@@ -63,9 +83,7 @@ public:
 	void pickFirstTurn()
 	{
 		cout << "Flipping a coin to decide who goes first...";
-		
-		srand(time(nullptr));
-		currPlayerIndex = abs(rand()) % players.size();
+		currPlayerIndex = randomInt(0, players.size()-1);
 
 		Player* currPlayer = getCurrentPlayer();
 		cout << currPlayer->getName() << " goes first!" << endl;
@@ -125,9 +143,9 @@ public:
 		cout << "Current boneyard: ";
 		table.printBoneyard();
 
-		printPlayersHands();
+        printPlayersHands();
 
-		if(player->handEmpty())
+        if(player->handEmpty())
 		{
 			cout << player->getName() << " is the winner!" << endl;
 			return true;
