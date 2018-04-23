@@ -12,22 +12,9 @@ using namespace std;
 
 class API : Random
 {
-private:
-	static const int PLAYER_COUNT = 2;
-	static const int INITIAL_HAND_SIZE = 10;
-
-	Table table;
-	
-	vector<Player> players;
-
-	int currPlayerIndex = 0;
-	int turnCount = 0;
-
 public:
-	API()
-		: table()
-		, players()
-	{}
+	API();
+	~API();
 
 	/**
 	 * @brief Runs through a game of Dominoes
@@ -39,80 +26,39 @@ public:
 	 * 
 	 * @return int 
 	 */
-	int run()
-	{
-        create();
-        
-		deal();
-		pickFirstTurn();
-		initialTurn();
+	int run();
 
-		while(!isBlocked())
-		{
-			if(playTurn()) return 0;
-		}
+private:
+	private:
+	static const int PLAYER_COUNT = 2;
+	static const int INITIAL_HAND_SIZE = 10;
 
-		cout << "Players are blocked. Game over!" << endl;
-
-		return 0;
-	}
+	Table table;
 	
-	void create()
-    {
-        Random::create();
-        
-        table.create();
+	vector<Player> players;
 
-        createPlayers(PLAYER_COUNT);
-    }
+	int currPlayerIndex = 0;
+	int turnCount = 0;
+
 	
-	void createPlayers(int playerCount)
-    {
-		for(int playerIndex = 0; playerIndex < playerCount; ++playerIndex)
-		{
-			stringstream playerName;
-			playerName << "Player" << (playerIndex+1);
-			createPlayer(playerName.str());
-		}
-    }
+	void create();
+	
+	void createPlayers(int playerCount);
 
-	void createPlayer(string playerName)
-	{
-		Player player = Player(playerName);
-		player.create();
-		players.push_back(player);
-	}
+	void createPlayer(string playerName);
     
 
 	/**
 	 * @brief Randomly decides which player goes first
 	 * 
 	 */
-	void pickFirstTurn()
-	{
-		cout << "Flipping a coin to decide who goes first...";
-		currPlayerIndex = randomInt(0, players.size()-1);
-
-		Player* currPlayer = getCurrentPlayer();
-		cout << currPlayer->getName() << " goes first!" << endl;
-
-	}
+	void pickFirstTurn();
 
 	/**
 	 * @brief Gives each player 10 dominoes
 	 * 
 	 */
-	void deal()
-	{
-		for(size_t i = 0; i < players.size(); ++i)
-		{
-			Player* player = &players[i];
-			player->draw(&table, INITIAL_HAND_SIZE);
-			
-			cout << player->getName() << " is drew 10 dominoes." << endl;
-			player->printHand();
-		}
-	}
+	void deal();
 
 	/**
 	 * @brief The very first turn
@@ -120,16 +66,7 @@ public:
 	 * 	Plays a random domino from the player's hand as the first domino
 	 *  in the chain
 	 */
-	void initialTurn()
-	{
-		Player* currPlayer = getCurrentPlayer();
-
-		cout << currPlayer->getName() << "'s turn..." << endl;
-		shared_ptr<Domino> dom(currPlayer->takeRandom());
-		table.addChainTail(dom);
-
-		nextPlayer();
-	}
+	void initialTurn();
 
 	/**
 	 * @brief A standard turn
@@ -139,53 +76,21 @@ public:
 	 * @return true 
 	 * @return false 
 	 */
-	bool playTurn()
-	{
-		Player* player = getCurrentPlayer();
-		player->playTurn(&table);
-
-		cout << player->getName() << "'s turn..." << endl;
-
-		cout << "Current chain: ";
-		table.printChain();
-
-		cout << "Current boneyard: ";
-		table.printBoneyard();
-
-        printPlayersHands();
-
-        if(player->handEmpty())
-		{
-			cout << player->getName() << " is the winner!" << endl;
-			return true;
-		}
-
-		++turnCount;
-		nextPlayer();
-		return false;
-	}
+	bool playTurn();
 
 	/**
 	 * @brief Changes whose turn it is
 	 * 
 	 * @return Player* 
 	 */
-	Player* nextPlayer()
-	{
-		currPlayerIndex = (currPlayerIndex+1) % players.size();
-		Player* currentPlayer = getCurrentPlayer();
-		return currentPlayer;
-	}
+	Player* nextPlayer();
 
 	/**
 	 * @brief Get the Current Player object
 	 * 
 	 * @return Player* 
 	 */
-	Player* getCurrentPlayer()
-	{
-		return &players[currPlayerIndex];
-	}
+	Player* getCurrentPlayer();
 
 	/**
 	 * @brief Checks if the players are blocked
@@ -193,29 +98,13 @@ public:
 	 * @return true 
 	 * @return false 
 	 */
-	bool isBlocked()
-	{
-		bool blocked = true;
-		for(size_t i = 0; i < players.size(); ++i)
-		{
-			blocked &= players[i].isBlocked();
-		}
-
-		return blocked;
-	}
+	bool isBlocked();
 
 	/**
 	 * @brief Prints all player's hands
 	 * 
 	 */
-	void printPlayersHands()
-	{
-		for(size_t i = 0; i < players.size(); ++i)
-		{
-			cout << players[i].getName() << "'s Hand: ";
-			players[i].printHand();
-		}
-	}
+	void printPlayersHands();
 };
 
 #endif /* API_H */
