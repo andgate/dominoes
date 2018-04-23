@@ -7,6 +7,7 @@
 
 using namespace std;
 
+
 class Domino {
 private:
 	int m_head;
@@ -25,10 +26,26 @@ public:
 
 	~Domino() {}
 
-
+	/**
+	 * @brief Get the Head object
+	 * 
+	 * @return int 
+	 */
 	int getHead() { return m_head; }
+
+	/**
+	 * @brief Get the Tail object
+	 * 
+	 * @return int 
+	 */
 	int getTail() { return m_tail; }
 
+	/**
+	 * @brief Rotates the domino
+	 * 
+	 * Swaps the values in the domino's
+	 * head and tail
+	 */
 	void rotate() {
 		int tmp = m_head;
 		m_head = m_tail;
