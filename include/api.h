@@ -2,6 +2,7 @@
 #define API_H
 
 #include <vector>
+#include <sstream>
 
 #include "random.h"
 #include "player.h"
@@ -12,6 +13,9 @@ using namespace std;
 class API : Random
 {
 private:
+	static const int PLAYER_COUNT = 2;
+	static const int INITIAL_HAND_SIZE = 10;
+
 	Table table;
 	
 	vector<Player> players;
@@ -58,22 +62,26 @@ public:
         Random::create();
         
         table.create();
-		table.printBoneyard();
 
-        createPlayers();
+        createPlayers(PLAYER_COUNT);
     }
 	
-	void createPlayers()
+	void createPlayers(int playerCount)
     {
-        Player p1 = Player("Player1");
-        Player p2 = Player("Player2");
-        
-        p1.create();
-        p2.create();
-        
-		players.push_back(p1);
-		players.push_back(p2);
+		for(int playerIndex = 0; playerIndex < playerCount; ++playerIndex)
+		{
+			stringstream playerName;
+			playerName << "Player" << (playerIndex+1);
+			createPlayer(playerName.str());
+		}
     }
+
+	void createPlayer(string playerName)
+	{
+		Player player = Player(playerName);
+		player.create();
+		players.push_back(player);
+	}
     
 
 	/**
@@ -99,7 +107,8 @@ public:
 		for(size_t i = 0; i < players.size(); ++i)
 		{
 			Player* player = &players[i];
-			player->draw(&table, 10);
+			player->draw(&table, INITIAL_HAND_SIZE);
+			
 			cout << player->getName() << " is drew 10 dominoes." << endl;
 			player->printHand();
 		}
