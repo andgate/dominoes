@@ -1,7 +1,6 @@
 #ifndef TABLE_H
 #define TABLE_H
 
-#include <iostream>
 #include <list>
 #include <vector>
 #include <memory>
@@ -23,186 +22,99 @@ private:
 
 
 public:
-	Table()
-		: boneyard()
-		, chain()
-	{}
-	
-	~Table()
-	{}
-    
+	Table();
+	~Table();
+
 
 	/**
 	 * @brief Initializes random number generator,
      *        creates and shuffles dominoes.
 	 * 
-	 * Generates every domino possible and adds
-	 * them to the boneyard. Then randomizes the
-	 * order of the boneyard
+	 *  Populates the boneyard with the 26 dominos
+	 *  needed for a game, and shuffles the boneyard.
 	 */
-	void create()
-	{
-        Random::create();
-        
-		boneyard.clear();
-		boneyard.reserve(DOMINOS_COUNT);
-		for (int i = 0; i <= DOMINO_MAX; ++i) {
-			for (int j = i; j <= DOMINO_MAX; ++j) {
-				shared_ptr<Domino> dom_ptr(new Domino(i, j));
-				boneyard.push_back(dom_ptr);
-			}
-    	}
-
-		shuffleBoneyard();
-	}
-
-	
-	void shuffleBoneyard()
-    {
-        int n = boneyard.size() - 1;
-        shared_ptr<Domino> tmp = nullptr;
-        for (unsigned i = 0; i < boneyard.size(); ++i)
-        {
-            unsigned j = randomInt(0, n);
-            tmp = boneyard[i];
-            boneyard[i] = boneyard[j];
-            boneyard[j] = tmp;
-        }
-    }
+	void create();
 
 	/**
-	 * @brief Adds a domino into the player's hand
-	 * 		
-	 * 	If there are dominoes left in the boneyard, it will
-	 * 	move one from it into the player's hand
+	 * @brief Shuffle the current boneyard
 	 * 
-	 * @return shared_ptr<Domino> 
+	 *  Shuffles the current boneyard in linear time.
+	 *  Does so by iterating through the dominoes,
+	 *  and randomly swapping each domino with another.
 	 */
-	shared_ptr<Domino> draw()
-	{
-		if (boneyard.empty()) return nullptr;
-		shared_ptr<Domino> dom(boneyard.back());
-		boneyard.pop_back();
-		return dom;
-	}
+	void shuffleBoneyard();
+
+	/**
+	 * @brief Draws a domino from the boneyard.
+	 * 		
+	 * 	If there are dominoes left in the boneyard, draw() will
+	 * 	remove a domino from the boneyard, and return that domino.
+	 *  Otherwise, a nullptr will be given.
+	 * 
+	 * @return Pointer to the domino drawn from the boneyard,
+     *         or nullptr when there are none to draw.
+	 */
+	shared_ptr<Domino> draw();
 
 	/**
 	 * @brief Determines if the boneyard is empty
 	 * 
-	 * @return true 
-	 * @return false 
+	 * @return True when empty, false otherwise.
 	 */
-	bool boneyardEmpty()
-	{
-		return boneyard.empty();
-	}
+	bool boneyardEmpty();
 
 	/**
-	 * @brief Get the Chain Head object
+	 * @brief Get the value at the head of the domino chain.
 	 * 
-	 * @return int 
+	 * @return value at the head of the domino chain.
 	 */
-	int getChainHead()
-	{
-		return chain.front()->getHead();
-	}
+	int getChainHead();
 
 	/**
-	 * @brief Adds the domino to the head of the chain
+	 * @brief Adds a domino to the head of the chain.
 	 * 
-	 * @param dom 
+	 * @param dom Domino to add to the head of the chain.
 	 */
-	void addChainHead(shared_ptr<Domino> dom)
-	{
-		chain.push_front(dom);
-	}
+	void addChainHead(shared_ptr<Domino> dom);
 
 	/**
-	 * @brief Get the Chain Tail object
+	 * @brief Get the value at the tail of the chain.
 	 * 
-	 * @return int 
+	 * @return value at the tail of the domino chain. 
 	 */
-	int getChainTail()
-	{
-		return chain.back()->getTail();
-	}
+	int getChainTail();
 
 	/**
-	 * @brief Adds the domino to the tail of the chain
+	 * @brief Adds a domino to the tail of the chain.
 	 * 
-	 * @param dom 
+	 * @param dom Domino to add to the head of the chain.
 	 */
-	void addChainTail(shared_ptr<Domino> dom)
-	{
-		chain.push_back(dom);
-	}
+	void addChainTail(shared_ptr<Domino> dom);
 
 	/**
-	 * @brief Tries to play a domino to the chain
+	 * @brief Tries to play a domino.
 	 * 
-	 * Takes the current domino and checks the to see if it can
-	 * be played on the chain in its current rotation. If it can't
-	 * then flip it and check again.
+	 * Takes a domino and checks the to see if it can
+	 * be played on the chain. If the head or tail of the domino
+	 * matches the head or tail of the chain, then the domino
+	 * will be added to the chain.
 	 * 
-	 * @param dom 
-	 * @return true 
-	 * @return false 
+	 * @param dom Domino to play
+	 * @return True when domino is played successfully, otherwise false.
 	 */
-	bool playPiece(shared_ptr<Domino> dom)
-	{
-		
-		if(chain.empty())
-		{
-			chain.push_back(dom);
-			return true;
-		}
-
-		int head = getChainHead();
-		int tail = getChainTail();
-
-		if (dom->getHead() == tail)
-		{
-			addChainTail(dom);
-			return true;
-		} else if (dom->getTail() == head) {
-			addChainHead(dom);
-			return true;
-		}
-
-		dom->rotate();
-
-		if (dom->getHead() == tail) {
-			addChainTail(dom);
-			return true;
-		} else if (dom->getTail() == head) {
-			addChainHead(dom);
-			return true;
-		}
-
-		return false;
-	}
+	bool playPiece(shared_ptr<Domino> dom);
 
 	/**
 	 * @brief Prints the current boneyard
 	 * 
 	 */
-	void printBoneyard()
-	{
-		for (auto& dom : boneyard)
-			cout << "[" << dom->getHead() << "|" << dom->getTail() << "] ";
-		cout << endl;
-	}
+	void printBoneyard();
 
 	/**
 	 * @brief Prints the current domino chain
 	 * 
 	 */
-	void printChain()
-	{
-		for (auto& dom : chain)
-			cout << "[" << dom->getHead() << "|" << dom->getTail() << "] ";
-		cout << endl;
-	}
+	void printChain();
 };
 
 #endif /* TABLE_H */

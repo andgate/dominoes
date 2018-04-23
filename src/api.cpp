@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "api.h"
 #include "player.h"
 #include "table.h"

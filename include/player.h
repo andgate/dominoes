@@ -23,27 +23,17 @@ private:
 	bool m_isBlocked;
 
 public:
-	Player(string name)
-		: hand(), m_name(name), m_isBlocked(false)
-	{}
-
-	~Player() {}
+	Player(string name);
+	~Player();
 	
-	void create()
-    {
-        Random::create();
-    }
+	void create();
 
 	/**
 	 * @brief Draws one domino
 	 * 
 	 * @param table
 	 */
-	void draw(Table* table)
-	{
-		shared_ptr<Domino> dom = table->draw();
-		hand.push_back(dom);
-	}
+	void draw(Table* table);
 
 	/**
 	 * @brief Draws multiple dominos
@@ -54,13 +44,7 @@ public:
 	 * @param table 
 	 * @param amount 
 	 */
-	void draw(Table* table, int amount)
-	{
-		for(int i = 0; i < amount; ++i)
-		{
-			draw(table);
-		}
-	}
+	void draw(Table* table, int amount);
 
 	/**
 	 * @brief The player's standard turn
@@ -70,51 +54,14 @@ public:
 	 * 
 	 * @param table 
 	 */
-	void playTurn(Table* table)
-	{
-		m_isBlocked = false;
-
-		for(size_t i = 0; i < hand.size(); ++i)
-		{
-			shared_ptr<Domino> dom(hand[i]); 
-			if(table->playPiece(dom))
-			{
-				hand.erase(hand.begin()+i);
-				return;
-			}
-		}
-
-		// Otherwise, draw until a piece is playable
-		while(true)
-		{
-			shared_ptr<Domino> dom = table->draw();
-			if(dom == nullptr)
-			{
-				m_isBlocked = true;
-				return;
-			}
-
-			if (table->playPiece(dom))
-				return;
-			else
-				hand.push_back(dom);
-		}
-	}
+	void playTurn(Table* table);
 
 	/**
 	 * @brief Takes a random domino from the player's hand
 	 * 
 	 * @return shared_ptr<Domino> 
 	 */
-	shared_ptr<Domino> takeRandom()
-	{
-		int domIndex = randomInt(0, hand.size() - 1);
-		
-		shared_ptr<Domino> dom(hand.at(domIndex));
-		hand.erase(hand.begin() + domIndex);
-		
-		return dom;
-	}
+	shared_ptr<Domino> takeRandom();
 
 	/**
 	 * @brief Determines if the hand is empty
@@ -122,10 +69,7 @@ public:
 	 * @return true 
 	 * @return false 
 	 */
-	bool handEmpty()
-	{
-		return hand.empty();
-	}
+	bool handEmpty();
 
 	/**
 	 * @brief Determines if the player is blocked
@@ -133,31 +77,20 @@ public:
 	 * @return true 
 	 * @return false 
 	 */
-	bool isBlocked()
-	{
-		return m_isBlocked;
-	}
+	bool isBlocked();
 
 	/**
 	 * @brief Get the Name object
 	 * 
 	 * @return string 
 	 */
-	string getName()
-	{
-		return m_name;
-	}
+	string getName();
 
 	/**
 	 * @brief Prints the player's hand
 	 * 
 	 */
-	void printHand()
-	{
-		for (auto& dom : hand)
-			cout << "[" << dom->getTail() << "|" << dom->getHead() << "] ";
-		cout << endl;
-	}
+	void printHand();
 };
 
 #endif /* PLAYER_H */
