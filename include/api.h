@@ -168,10 +168,10 @@ public:
 	 */
 	bool isBlocked()
 	{
-		bool blocked = false;
+		bool blocked = true;
 		for(size_t i = 0; i < players.size(); ++i)
 		{
-			blocked |= players[i].isBlocked();
+			blocked &= players[i].isBlocked();
 		}
 
 		return blocked;
