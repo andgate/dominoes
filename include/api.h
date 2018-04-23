@@ -24,6 +24,16 @@ public:
 		, players()
 	{}
 
+	/**
+	 * @brief Runs through a game of Dominoes
+	 * 
+	 * Sets up the table, boneyard, and players. Deals the 
+	 * dominoes to the players and selects who has the first
+	 * turn. Chosen player plays the first domino, then the
+	 * game continues until neither player can play.
+	 * 
+	 * @return int 
+	 */
 	int run()
 	{
 		table.setup();
@@ -46,6 +56,10 @@ public:
 		return 0;
 	}
 
+	/**
+	 * @brief Randomly decides which player goes first
+	 * 
+	 */
 	void pickFirstTurn()
 	{
 		cout << "Flipping a coin to decide who goes first...";
@@ -58,6 +72,10 @@ public:
 
 	}
 
+	/**
+	 * @brief Gives each player 10 dominoes
+	 * 
+	 */
 	void deal()
 	{
 		for(size_t i = 0; i < players.size(); ++i)
@@ -69,7 +87,12 @@ public:
 		}
 	}
 
-
+	/**
+	 * @brief The very first turn
+	 * 
+	 * 	Plays a random domino from the player's hand as the first domino
+	 *  in the chain
+	 */
 	void initialTurn()
 	{
 		Player* currPlayer = getCurrentPlayer();
@@ -81,6 +104,14 @@ public:
 		nextPlayer();
 	}
 
+	/**
+	 * @brief A standard turn
+	 * 
+	 * Takes a random domino from the player's hand and plays it
+	 * 
+	 * @return true 
+	 * @return false 
+	 */
 	bool playTurn()
 	{
 		Player* player = getCurrentPlayer();
@@ -107,6 +138,11 @@ public:
 		return false;
 	}
 
+	/**
+	 * @brief Changes whose turn it is
+	 * 
+	 * @return Player* 
+	 */
 	Player* nextPlayer()
 	{
 		currPlayerIndex = (currPlayerIndex+1) % players.size();
@@ -114,11 +150,22 @@ public:
 		return currentPlayer;
 	}
 
+	/**
+	 * @brief Get the Current Player object
+	 * 
+	 * @return Player* 
+	 */
 	Player* getCurrentPlayer()
 	{
 		return &players[currPlayerIndex];
 	}
 
+	/**
+	 * @brief Checks if the players are blocked
+	 * 
+	 * @return true 
+	 * @return false 
+	 */
 	bool isBlocked()
 	{
 		bool blocked = false;
@@ -130,6 +177,10 @@ public:
 		return blocked;
 	}
 
+	/**
+	 * @brief Prints all player's hands
+	 * 
+	 */
 	void printPlayersHands()
 	{
 		for(size_t i = 0; i < players.size(); ++i)
