@@ -1,5 +1,7 @@
-#include "domino.h"
+#include <sstream>
+#include <string>
 
+#include "domino.h"
 
 Domino::Domino(int headNum, int tailNum)
 	: m_head(headNum)
@@ -29,4 +31,11 @@ void Domino::rotate()
 	int tmp = m_head;
 	m_head = m_tail;
 	m_tail = tmp;
+}
+
+string Domino::toString()
+{
+	stringstream dominoString;
+	dominoString << "[" << m_head << "|" << m_tail << "]";
+	return dominoString.str();
 }

@@ -95,7 +95,7 @@ private:
 	 * 
 	 * Takes a random domino from the player's hand and plays it
 	 * 
-	 * @return True when the current 
+	 * @return True when the current player has won.
 	 */
 	bool playTurn();
 
@@ -116,8 +116,7 @@ private:
 	/**
 	 * @brief Checks if the players are blocked
 	 * 
-	 * @return true 
-	 * @return false 
+	 * @return True when blocked, false otherwise.
 	 */
 	bool isBlocked();
 
@@ -126,6 +125,12 @@ private:
 	 * 
 	 */
 	void printPlayersHands();
+
+	/**
+	 * @brief Print ranking of players to the console.
+	 * 
+	 */
+	void printRanking();
 };
 
 #endif /* API_H */

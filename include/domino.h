@@ -3,6 +3,8 @@
 
 #include <string>
 
+using namespace std;
+
 /**
  * @brief Domino class which represents a piece.
  *
@@ -55,6 +57,16 @@ public:
 	 * swapping the domino's head and tail.
 	 */
 	void rotate();
+
+	/**
+	 * @brief Get string representation of a domino.
+	 * 
+	 *  For example, a domino with head=1 and a tail=2
+	 *  will be represented as [1|2].
+	 *
+	 * @return String representation of domino.
+	 */
+	string toString();
 
 private:
 	int m_head; // Head of domino (or left-most value).

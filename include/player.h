@@ -71,6 +71,13 @@ public:
 	bool handEmpty();
 
 	/**
+	 * @brief Get size of player's hand.
+	 * 
+	 * @return Number of dominos in player's hand.
+	 */
+	int handSize();
+
+	/**
 	 * @brief Determines if the player is blocked.
 	 *
 	 *  A player is considered blocked when they
@@ -93,6 +100,12 @@ public:
 	 */
 	void printHand();
 
+	/**
+	 * @brief Shows the player's hand as a string.
+	 * 
+	 * @return A string of the dominos in the players hand
+	 */
+	string showHand();
 
 private:
 	vector<shared_ptr<Domino>> hand;

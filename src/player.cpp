@@ -1,4 +1,5 @@
 #include <iostream>
+#include <sstream>
 
 #include "player.h"
 
@@ -36,6 +37,7 @@ void Player::playTurn(Table* table)
 		shared_ptr<Domino> dom(hand[i]); 
 		if(table->playPiece(dom))
 		{
+			cout << m_name << " plays " << dom->toString() << endl;
 			hand.erase(hand.begin()+i);
 			return;
 		}
@@ -45,14 +47,19 @@ void Player::playTurn(Table* table)
 	while(!table->boneyardEmpty())
 	{
 		shared_ptr<Domino> dom(table->draw());
+		cout << m_name << " draws " << dom->toString() << endl;
 
 		if (table->playPiece(dom))
+		{
+			cout << m_name << " plays " << dom->toString() << endl;
 			return;
+		}
 		else
 			hand.push_back(dom);
 	}
 
 	// No playable pieces, player was blocked this turn.
+	cout << m_name << " is blocked this turn!" << endl;
 	m_isBlocked = true;
 }
 
@@ -60,6 +67,12 @@ void Player::playTurn(Table* table)
 bool Player::handEmpty()
 {
 	return hand.empty();
+}
+
+
+int Player::handSize()
+{
+	return hand.size();
 }
 
 
@@ -77,7 +90,17 @@ string Player::getName()
 
 void Player::printHand()
 {
+	if(hand.empty()) {
+		cout << m_name << "'s hand is empty." << endl;
+	} else {
+		cout << m_name << "'s hand (" << hand.size() << " pieces left): " << showHand() << endl;
+	}
+}
+
+string Player::showHand()
+{
+	stringstream out;
 	for (auto& dom : hand)
-		cout << "[" << dom->getTail() << "|" << dom->getHead() << "] ";
-	cout << endl;
+		out << "[" << dom->getTail() << "|" << dom->getHead() << "] ";
+	return out.str();
 }

@@ -94,17 +94,25 @@ void Table::shuffleBoneyard()
 
 void Table::printBoneyard()
 {
-	for (auto& dom : boneyard)
-		cout << "[" << dom->getHead() << "|" << dom->getTail() << "] ";
-	cout << endl;
+	if(boneyard.empty()) {
+		cout << "(empty)" << endl;
+	} else {
+		for (auto& dom : boneyard)
+			cout << "[" << dom->getHead() << "|" << dom->getTail() << "] ";
+		cout << endl;
+	}
 }
 
 
 void Table::printChain()
 {
-	for (auto& dom : chain)
-		cout << "[" << dom->getHead() << "|" << dom->getTail() << "] ";
-	cout << endl;
+	if(chain.empty()) {
+		cout << "(empty)" << endl;
+	} else {
+		for (auto& dom : chain)
+			cout << "[" << dom->getHead() << "|" << dom->getTail() << "] ";
+		cout << endl;
+	}
 }
 
 
