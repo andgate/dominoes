@@ -1,5 +1,3 @@
-#include <sstream>
-
 #include "domino.h"
 
 
@@ -21,12 +19,10 @@ int Domino::getHead()
 	return m_head;
 }
 
-
 int Domino::getTail()
 {
 	return m_tail;
 }
-
 
 void Domino::rotate()
 {

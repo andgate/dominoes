@@ -14,83 +14,90 @@ using namespace std;
 /**
  * @brief The Player class
  * 
+ *  The player class interacts with a table
+ *  by drawing or playing domino pieces.
  */
-class Player : Random
+class Player
 {
-private:
-	vector<shared_ptr<Domino>> hand;
-	string m_name;
-	bool m_isBlocked;
-
 public:
+	/**
+	 * @brief Constructor for Player.
+	 *
+	 * @param name Name to give the player.
+	 */
 	Player(string name);
-	~Player();
-	
-	void create();
 
 	/**
-	 * @brief Draws one domino
+	 * @brief Default Destructor for Player.
+	 */
+	~Player();
+
+	/**
+	 * @brief Draws a domino from a table's boneyard
+	 *        to this player's hand.
 	 * 
-	 * @param table
+	 * @param table Table to draw from.
 	 */
 	void draw(Table* table);
 
 	/**
-	 * @brief Draws multiple dominos
+	 * @brief Draws multiple dominos.
 	 * 
 	 * The player draws the amount of dominos as
-	 * specified by 'amount'
+	 * specified by 'amount'.
 	 * 
-	 * @param table 
-	 * @param amount 
+	 * @param table Table to draw from.
+	 * @param amount Amount of dominos to draw.
 	 */
 	void draw(Table* table, int amount);
 
 	/**
-	 * @brief The player's standard turn
+	 * @brief The player's standard turn.
 	 * 
 	 * Tries to play a domino from the player's hand.
 	 * If unsucessful, draw a domino and repeat the process.
+	 * When the chain is empty, player just will play first
+	 * domino on hand.
 	 * 
-	 * @param table 
+	 * @param table Table to play on.
 	 */
 	void playTurn(Table* table);
 
 	/**
-	 * @brief Takes a random domino from the player's hand
+	 * @brief Determines if the player's hand is empty.
 	 * 
-	 * @return shared_ptr<Domino> 
-	 */
-	shared_ptr<Domino> takeRandom();
-
-	/**
-	 * @brief Determines if the hand is empty
-	 * 
-	 * @return true 
-	 * @return false 
+	 * @return True when empty, false otherwise.
 	 */
 	bool handEmpty();
 
 	/**
-	 * @brief Determines if the player is blocked
+	 * @brief Determines if the player is blocked.
+	 *
+	 *  A player is considered blocked when they
+	 *  were unable to play a domino on their last turn.
 	 * 
-	 * @return true 
-	 * @return false 
+	 * @return True when blocked, false otherwise.
 	 */
 	bool isBlocked();
 
 	/**
-	 * @brief Get the Name object
+	 * @brief Get the name of the player
 	 * 
-	 * @return string 
+	 * @return String containing the name of the player.
 	 */
 	string getName();
 
 	/**
-	 * @brief Prints the player's hand
+	 * @brief Prints the player's hand.
 	 * 
 	 */
 	void printHand();
+
+
+private:
+	vector<shared_ptr<Domino>> hand;
+	string m_name;
+	bool m_isBlocked;
 };
 
 #endif /* PLAYER_H */

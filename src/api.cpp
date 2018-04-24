@@ -1,4 +1,5 @@
 #include <iostream>
+#include <stdlib.h>
 
 #include "api.h"
 #include "player.h"
@@ -15,27 +16,23 @@ API::~API() {}
 int API::run()
 {
 	create();
-	
-	deal();
+	deal(INITIAL_HAND_SIZE);
 	pickFirstTurn();
-	initialTurn();
 
 	while(!isBlocked())
 	{
-		if(playTurn()) return 0;
+		if(playTurn()) return EXIT_SUCCESS;
 	}
 
 	cout << "Players are blocked. Game over!" << endl;
 
-	return 0;
+	return EXIT_SUCCESS;
 }
 
 void API::create()
 {
 	Random::create();
-	
 	table.create();
-
 	createPlayers(PLAYER_COUNT);
 }
 
@@ -52,7 +49,6 @@ void API::createPlayers(int playerCount)
 void API::createPlayer(string playerName)
 {
 	Player player = Player(playerName);
-	player.create();
 	players.push_back(player);
 }
 
@@ -68,28 +64,16 @@ void API::pickFirstTurn()
 }
 
 
-void API::deal()
+void API::deal(int amount)
 {
 	for(size_t i = 0; i < players.size(); ++i)
 	{
 		Player* player = &players[i];
-		player->draw(&table, INITIAL_HAND_SIZE);
+		player->draw(&table, amount);
 		
 		cout << player->getName() << " is drew 10 dominoes." << endl;
 		player->printHand();
 	}
-}
-
-
-void API::initialTurn()
-{
-	Player* currPlayer = getCurrentPlayer();
-
-	cout << currPlayer->getName() << "'s turn..." << endl;
-	shared_ptr<Domino> dom(currPlayer->takeRandom());
-	table.addChainTail(dom);
-
-	nextPlayer();
 }
 
 

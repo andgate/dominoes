@@ -1,29 +1,42 @@
 #ifndef RANDOM_H
 #define RANDOM_H
 
-#include <ctime> 
-#include <cstdlib>
-
 #include <random>
 
 using namespace std;
 
-typedef mt19937 RNG;
-
+/**
+ * @brief Class for random number generation.
+ *
+ *  This class is meant to be inherited. Specifially, the
+ *  create method should be overriden. This class allows
+ *  its children to internally generate random numbers.
+ *  In addition, this class will not conflict with other
+ *  random number generators that are in use.
+ */
 class Random
 {
 private:
+    typedef mt19937 RNG; // Use mersenne twister as internal rng
     RNG m_rng;
     
 public:
+    /**
+	 * @brief Default constructor for Random.
+	 */
     Random()
     : m_rng() {}
     
+    /**
+	 * @brief Default destructor for Random.
+	 */
     ~Random() {}
  
 protected:
     /**
-    * @brief Seeds random number generator with current time.
+    * @brief Create the random number generator.
+    * 
+    *  This method needs to be overriden.
     */
     virtual void create()
     {

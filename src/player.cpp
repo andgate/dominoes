@@ -6,12 +6,8 @@ Player::Player(string name)
 	: hand(), m_name(name), m_isBlocked(false)
 {}
 
-Player::~Player() {}
 
-void Player::create()
-{
-	Random::create();
-}
+Player::~Player() {}
 
 
 void Player::draw(Table* table)
@@ -45,34 +41,19 @@ void Player::playTurn(Table* table)
 		}
 	}
 
-	// Otherwise, draw until a playable piece is found.
-	while(true)
+	// Otherwise, draw until a playable piece is found or the boneyard is empty.
+	while(!table->boneyardEmpty())
 	{
 		shared_ptr<Domino> dom(table->draw());
-
-		// No pieces to draw? Return a 
-		if(dom == nullptr)
-		{
-			m_isBlocked = true;
-			return;
-		}
 
 		if (table->playPiece(dom))
 			return;
 		else
 			hand.push_back(dom);
 	}
-}
 
-
-shared_ptr<Domino> Player::takeRandom()
-{
-	int domIndex = randomInt(0, hand.size() - 1);
-	
-	shared_ptr<Domino> dom(hand.at(domIndex));
-	hand.erase(hand.begin() + domIndex);
-	
-	return dom;
+	// No playable pieces, player was blocked this turn.
+	m_isBlocked = true;
 }
 
 

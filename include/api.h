@@ -10,10 +10,24 @@
 
 using namespace std;
 
+
+/**
+ * @brief Domino API class.
+ * 
+ * Simply call run and this API will simulate
+ * a game of dominoes.
+ */
 class API : Random
 {
 public:
+	/**
+	 * @brief Default constructor
+	 */
 	API();
+
+	/**
+	 * @brief Default destructor
+	 */
 	~API();
 
 	/**
@@ -22,14 +36,14 @@ public:
 	 * Sets up the table, boneyard, and players. Deals the 
 	 * dominoes to the players and selects who has the first
 	 * turn. Chosen player plays the first domino, then the
-	 * game continues until neither player can play.
+	 * game continues until the game is completed.
+	 * Prints output of the game to the console.
 	 * 
-	 * @return int 
+	 * @return EXIT_SUCCESS when successful, otherwise EXIT_FAILURE.
 	 */
 	int run();
 
 private:
-	private:
 	static const int PLAYER_COUNT = 2;
 	static const int INITIAL_HAND_SIZE = 10;
 
@@ -40,41 +54,48 @@ private:
 	int currPlayerIndex = 0;
 	int turnCount = 0;
 
-	
+	/**
+	 * @brief Creates the API for dominos.
+	 *
+	 *  Creates random number generator, table, and players.
+	 */
 	void create();
 	
+	/**
+	 * @brief Creates some number of players.
+	 *
+	 *  Players willed be named "Player1", "Player2", etc.
+	 *
+	 * @param playerCount number of players to create.
+	 */
 	void createPlayers(int playerCount);
 
+	/**
+	 * @brief Create a single player.
+	 *
+	 * @param playerName Name to give player.
+	 */
 	void createPlayer(string playerName);
     
 
 	/**
-	 * @brief Randomly decides which player goes first
-	 * 
+	 * @brief Randomly decides which player goes first.
 	 */
 	void pickFirstTurn();
 
 	/**
-	 * @brief Gives each player 10 dominoes
-	 * 
+	 * @brief Gives each player an amount dominoes.
+	 *
+	 * @param amount Number of dominos each player may recieve.
 	 */
-	void deal();
-
-	/**
-	 * @brief The very first turn
-	 * 
-	 * 	Plays a random domino from the player's hand as the first domino
-	 *  in the chain
-	 */
-	void initialTurn();
+	void deal(int amount);
 
 	/**
 	 * @brief A standard turn
 	 * 
 	 * Takes a random domino from the player's hand and plays it
 	 * 
-	 * @return true 
-	 * @return false 
+	 * @return True when the current 
 	 */
 	bool playTurn();
 
