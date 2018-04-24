@@ -1,3 +1,10 @@
+/**
+ * Authors:     Gabriel Anderson,
+ *              Matthew Harker
+ * Assignment:  Project 1, Dominoes
+ * Class:       CS380
+ */
+
 #include "api.h"
 
 /**
